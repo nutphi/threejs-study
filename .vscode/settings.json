@@ -1,0 +1,35 @@
+{
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "todo-tree.tree.showScanModeButton": false,
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "gitlens.advanced.messages": {
+      "suppressCommitHasNoPreviousCommitWarning": true
+    },
+    "search.exclude": {
+      "**/*.code-search": false,
+      "**/bower_components": false,
+      "**/node_modules": true
+    },
+    "files.exclude": {
+      "**/.DS_Store": false,
+      "**/.git": false,
+      "**/.hg": false,
+      "**/.svn": false,
+      "**/CVS": false
+    },
+    "files.watcherExclude": {
+      "**/.git/objects/**": false,
+      "**/.git/subtree-cache/**": false,
+      "**/.hg/store/**": false,
+      "**/node_modules/**": false
+    },
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+    "workbench.editor.untitled.hint": "hidden",
+    "bracketPairColorizer.depreciation-notice": false,
+    "diffEditor.ignoreTrimWhitespace": false
+  }
