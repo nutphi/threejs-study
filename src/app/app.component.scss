@@ -1,12 +1,16 @@
-div {
+.center {
     position: absolute;
-    top: 50px;
+    top: 20px;
+    left: 0px;
 }
-button {
-    border: grey solid 1px;
-    border-radius: 4px;
-    padding: 5px 15px;
+a {
+    text-decoration: none;
     margin: 10px;
-    background-color: blanchedalmond;
-    color: grey;
+    padding: 5px 10px;
+    background-color: springgreen;
+    border: 1px solid springgreen;
+    border-radius: 15px;
+}
+.active {
+    color: yellow;
 }

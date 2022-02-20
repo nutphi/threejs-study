@@ -1,0 +1,16 @@
+<canvas class="webgl"></canvas>
+<div>
+    <button (click)="swap()">swap box</button>
+    <button (click)="startRecording()" [disabled]="disabled">
+        <ng-container *ngIf="countdown === COUNT_VDO_RENDER_IN_SEC">start capture vdo 10 sec</ng-container>
+        <ng-container *ngIf="countdown !== COUNT_VDO_RENDER_IN_SEC">capturing {{countdown}} sec</ng-container>
+    </button><br>
+
+    <ng-container *ngIf="downloadBlob != null">
+        <button (click)="download()">download</button>
+        
+    </ng-container>
+</div>
+
+<!-- <button (click)="seeVideo()">see video</button> -->
+<!-- <div class="video"></div> -->
