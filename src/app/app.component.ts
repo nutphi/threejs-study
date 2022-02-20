@@ -13,9 +13,9 @@ export class AppComponent implements AfterViewInit, OnInit {
   readonly COUNT_VDO_RENDER_IN_SEC = 10;
   scene = new THREE.Scene();
   sizes = {width: window.innerWidth, height: window.innerHeight};
-  mesh = new THREE.Mesh(new THREE.BoxGeometry(1,1,1) , new THREE.MeshBasicMaterial({color: 'red', wireframe: true}));
-  mesh2 = new THREE.Mesh(new THREE.BoxGeometry(1,1,1) , new THREE.MeshBasicMaterial({color: 'blue', wireframe: true}));
-  mesh3 = new THREE.Mesh(new THREE.SphereGeometry(1, 9) , new THREE.MeshBasicMaterial({color: 'yellow', wireframe: true}));
+  mesh = new THREE.Mesh(new THREE.BoxGeometry(1,1,1) , new THREE.MeshBasicMaterial({color: 'red'}));
+  mesh2 = new THREE.Mesh(new THREE.BoxGeometry(1,1,1) , new THREE.MeshBasicMaterial({color: 'blue'}));
+  mesh3 = new THREE.Mesh(new THREE.SphereGeometry(1, 9) , new THREE.MeshBasicMaterial({color: 'yellow'}));
   // mesh3 = new THREE.Mesh(new THREE.BoxGeometry(1,1,1) , new THREE.MeshBasicMaterial({color: 'green'}));
   // mesh4 = new THREE.Mesh(new THREE.BoxGeometry(1,1,1) , new THREE.MeshBasicMaterial({color: 'yellow'}));
   // group = new THREE.Group();
@@ -41,6 +41,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.mesh2.position.y = -2.5;
     this.mesh3.position.x = 0;
     this.mesh3.position.y = -2.5;
+    this.mesh3.position.z = 2;
     // this.mesh2.position.x = -1.5;
     // this.mesh3.position.y = 1.5;
     // this.mesh4.position.y = -1.5;
@@ -54,10 +55,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     this.scene.add(this.mesh2);
     this.scene.add(this.mesh3);
     // this.scene.add(this.axisHelper);
-    fromEvent(window, 'resize').pipe(takeUntil(this.unsubscribe)).subscribe(() => {
-      this.sizes = { width: window.innerWidth, height: window.innerHeight };
-      this.renderer.setSize(this.sizes.width, this.sizes.height);
-    })
   }
   
   swap() {
@@ -66,10 +63,11 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    const canvas = document.querySelector('.webgl') as HTMLCanvasElement;
+    const canvas = document.querySelector('.webgl') as any;
     this.control = new OrbitControls(this.camera, canvas);
     this.control.enableDamping = true;    
     this.renderer = new THREE.WebGLRenderer({canvas});
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // to make sure for some device which has higher pixel ratio
     this.renderer.setSize(this.sizes.width, this.sizes.height);
     console.time('frame rate');
     this.time = Date.now();
@@ -77,6 +75,33 @@ export class AppComponent implements AfterViewInit, OnInit {
     // gsap.to(this.group.position, {duration: 2, delay: 1, x: -3});
     const clock = new THREE.Clock();
     this.tick(clock);
+
+
+    fromEvent(window, 'resize').pipe(takeUntil(this.unsubscribe)).subscribe(() => {
+      this.sizes.width = window.innerWidth;
+      this.sizes.height = window.innerHeight;
+      this.camera.aspect = window.innerWidth/window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(this.sizes.width, this.sizes.height);
+    });
+    fromEvent(window, 'dblclick').pipe(takeUntil(this.unsubscribe)).subscribe(() => {
+      const fullscreenElement = document.fullscreenElement || (document as any)['webkitFullscreenElement'];
+      if (!fullscreenElement) {
+        if (canvas.requestFullscreen) {
+          canvas.requestFullscreen();
+        } else if (canvas.webkitRequestFullscreen) {
+          canvas.webkitRequestFullscreen();
+        }
+        
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if ((document as any)['webkitExitFullscreen']) {
+          (document as any).webkitExitFullscreen();
+        }
+        
+      }
+    });
   }
   
 
