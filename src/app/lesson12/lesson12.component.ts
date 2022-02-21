@@ -13,7 +13,9 @@ export class Lesson12Component implements OnInit {
   scene: THREE.Scene = new THREE.Scene();
   material = {
     basic: new THREE.MeshBasicMaterial(),
-    normal: new THREE.MeshNormalMaterial()
+    normal: new THREE.MeshNormalMaterial(),
+    matcap: new THREE.MeshMatcapMaterial(),
+    depth: new THREE.MeshDepthMaterial()
   }
   
   sphere!: THREE.Mesh;
@@ -26,12 +28,20 @@ export class Lesson12Component implements OnInit {
   unsubscribe: Subject<void> = new Subject<void>();
   controls!: OrbitControls;
   texture: {[key:string]: THREE.Texture} = {};
+  matcapTexture: {[key:string]: THREE.Texture} = {};
   
   constructor() { }
 
   ngOnInit(): void {
     // add param for gui
-    const param = {material: 'normal' as 'normal' | 'basic', texture: 'alpha texture', alphaMap: 'alpha texture', opacity: 0.5, side: 'DoubleSide'};
+    const param = {
+      material: 'normal' as 'normal' | 'basic' | 'matcap' | 'depth', 
+      // basic
+      texture: 'alpha texture', alphaMap: 'alpha texture', opacity: 0.5, side: 'DoubleSide',
+      matcap: {
+        texture: '1'
+      }
+    };
     
     // load texture
     const loadingmanager = new THREE.LoadingManager(
@@ -47,6 +57,15 @@ export class Lesson12Component implements OnInit {
     this.texture['metalness textture'] = textloader.load('assets/textures/door/metalness.jpg', () => console.log('load'));
     this.texture['roughness textture'] = textloader.load('assets/textures/door/roughness.jpg', () => console.log('load'));
 
+    this.matcapTexture['1'] = textloader.load('assets/textures/matcaps/1.png', () => console.log('load'));
+    this.matcapTexture['2'] = textloader.load('assets/textures/matcaps/2.png', () => console.log('load'));
+    this.matcapTexture['3'] = textloader.load('assets/textures/matcaps/3.png', () => console.log('load'));
+    this.matcapTexture['4'] = textloader.load('assets/textures/matcaps/4.png', () => console.log('load'));
+    this.matcapTexture['5'] = textloader.load('assets/textures/matcaps/5.png', () => console.log('load'));
+    this.matcapTexture['6'] = textloader.load('assets/textures/matcaps/6.png', () => console.log('load'));
+    this.matcapTexture['7'] = textloader.load('assets/textures/matcaps/7.png', () => console.log('load'));
+    this.matcapTexture['8'] = textloader.load('assets/textures/matcaps/8.png', () => console.log('load'));
+    
     // update material texture, side
     this.material.basic.map = this.texture[param.texture];
     this.material.basic.side = THREE.DoubleSide;
@@ -60,44 +79,57 @@ export class Lesson12Component implements OnInit {
     this.scene.add(this.camera);
     this.camera.position.set(0,0,3);
     const gui = new GUI();
-    gui.add(param, 'material', ['basic', 'normal']).onChange((text: 'basic' | 'normal') => {
+    gui.add(param, 'material', ['basic', 'normal', 'matcap', 'depth']).onChange((text: 'basic' | 'normal' | 'matcap' | 'depth') => {
       this.sphere.material = this.material[text];
       this.plane.material = this.material[text];
       this.torus.material = this.material[text];
     })
     const basicGui = gui.addFolder('basic material');
     const normalGui = gui.addFolder('normal material');
-    gui.folders.push(basicGui, normalGui);
-    basicGui.addColor(this.material.basic, 'color');
-    basicGui.add(param, 'texture', [ 'alpha texture', 'ambient occlusion texture', 'color textture', 'height textture', 'metalness textture', 'roughness textture' ] ).onChange((text: string) => {
-      this.material.basic.map = this.texture[text];
-    });
-    basicGui.add(this.material.basic, 'wireframe');
-    basicGui.add(param, 'opacity', 0, 1, 0.1).onChange((n: number) => {
-      this.material.basic.transparent = true;
-      this.material.basic.opacity = n;
-    });
+    const matcapGui = gui.addFolder('matcap material');
+    const depthGui = gui.addFolder('depth material');
+    gui.folders.push(basicGui, normalGui, matcapGui, depthGui);
 
-    basicGui.add(param, 'texture', [ 'none', 'alpha texture', 'ambient occlusion texture', 'color textture', 'height textture', 'metalness textture', 'roughness textture' ] ).onChange((text: string) => {
-      if (text !== 'none') {
+    // basic gui;
+    {
+      basicGui.addColor(this.material.basic, 'color');
+      basicGui.add(param, 'texture', [ 'alpha texture', 'ambient occlusion texture', 'color textture', 'height textture', 'metalness textture', 'roughness textture' ] ).onChange((text: string) => {
         this.material.basic.map = this.texture[text];
-      } else {
-        this.material.basic.map = null;
-      }
-    });
+      });
+      basicGui.add(this.material.basic, 'wireframe');
+      basicGui.add(param, 'opacity', 0, 1, 0.1).onChange((n: number) => {
+        this.material.basic.transparent = true;
+        this.material.basic.opacity = n;
+      });
+      basicGui.add(param, 'texture', [ 'none', 'alpha texture', 'ambient occlusion texture', 'color textture', 'height textture', 'metalness textture', 'roughness textture' ] ).onChange((text: string) => {
+        if (text !== 'none') {
+          this.material.basic.map = this.texture[text];
+        } else {
+          this.material.basic.map = null;
+        }
+      });
+      basicGui.add(param, 'alphaMap', [ 'none', 'alpha texture', 'ambient occlusion texture', 'color textture', 'height textture', 'metalness textture', 'roughness textture' ] ).onChange((text: string) => {
+        this.material.basic.transparent = true;
+        if (text !== 'none') {
+          this.material.basic.alphaMap = this.texture[text];
+        } else {
+          this.material.basic.alphaMap = null;
+        }
+      });
+      basicGui.add(param, 'side', ['FrontSide', 'BackSide', 'DoubleSide']).onChange((side: 'FrontSide' | 'BackSide' | 'DoubleSide') => {
+        this.material.basic.side = THREE[side];
+      })
+    }
 
-    basicGui.add(param, 'alphaMap', [ 'none', 'alpha texture', 'ambient occlusion texture', 'color textture', 'height textture', 'metalness textture', 'roughness textture' ] ).onChange((text: string) => {
-      this.material.basic.transparent = true;
-      if (text !== 'none') {
-        this.material.basic.alphaMap = this.texture[text];
-      } else {
-        this.material.basic.alphaMap = null;
-      }
-    });
-
-    basicGui.add(param, 'side', ['FrontSide', 'BackSide', 'DoubleSide']).onChange((side: 'FrontSide' | 'BackSide' | 'DoubleSide') => {
-      this.material.basic.side = THREE[side];
-    })
+    // matcap gui;
+    {
+      matcapGui.add(param.matcap, 'texture', ['1', '2', '3', '4', '5', '6', '7', '8']).onChange((text: string) => {
+        this.material.matcap.map = this.matcapTexture[text];  
+      });
+    }
+    // depth gui;
+    {
+    }
   }
 
   ngAfterViewInit(): void {
