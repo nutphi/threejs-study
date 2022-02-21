@@ -8,8 +8,13 @@ import { Lesson0to8Component } from './lesson0to8/lesson0to8.component';
 import { Lesson10Component } from './lesson10/lesson10.component';
 import { RouterModule, Routes } from '@angular/router';
 import { Lesson11Component } from './lesson11/lesson11.component';
+import { Lesson12Component } from './lesson12/lesson12.component';
 
 const routes: Routes = [
+  {
+    path: 'lesson12',
+    component: Lesson12Component
+  },
   {
     path: 'lesson11',
     component: Lesson11Component
@@ -33,7 +38,8 @@ const routes: Routes = [
     Lesson9Component,
     Lesson0to8Component,
     Lesson10Component,
-    Lesson11Component
+    Lesson11Component,
+    Lesson12Component
   ],
   imports: [
     BrowserModule,
