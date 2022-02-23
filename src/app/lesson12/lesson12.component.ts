@@ -10,7 +10,9 @@ type MAT_TYPE = typeof MAT_LIST[number];
 const SIDE_LIST = ['FrontSide', 'BackSide', 'DoubleSide'] as const;
 type SIDE_TYPE = typeof SIDE_LIST[number];
 
-const TEXTTURE_LIST = [ 'none', 'alpha texture', 'ambient occlusion texture', 'color textture', 'height textture', 'metalness textture', 'roughness textture' ];
+const TEXTURE_LIST = [ 'none', 'alpha texture', 'ambient occlusion texture', 'color texture', 'height texture', 'metalness texture', 'roughness texture', 'normal texture' ];
+
+const CUBETEXTURE_LIST = [ '0', '1', '2', '3', '4' ];
 
 const FILTER_LIST = ['NearestFilter', 'LinearFilter'] as const;
 type FILTER_TYPE = typeof FILTER_LIST[number];
@@ -32,6 +34,10 @@ export class Lesson12Component implements OnInit {
     phong: new THREE.MeshPhongMaterial(),
     toon: new THREE.MeshToonMaterial(),
     standard: new THREE.MeshStandardMaterial()
+    // physical material is too much gpu same as standard
+    // points material later
+    // shader material later
+    // raw shader material later
   }
   
   sphere!: THREE.Mesh;
@@ -46,7 +52,7 @@ export class Lesson12Component implements OnInit {
   texture: {[key:string]: THREE.Texture} = {};
   matcapTexture: {[key:string]: THREE.Texture} = {};
   toonGradients: {[key:string]: THREE.Texture} = {};
-  
+  cubeTexture: {[key:string]: THREE.Texture} = {};
   defaultMaterial: MAT_TYPE = 'standard'
 
   constructor() { }
@@ -69,7 +75,8 @@ export class Lesson12Component implements OnInit {
       maxFilter: null,
 
       // standard
-      displacementMap: 'alpha texture'
+      displacementMap: 'alpha texture',
+      envMap: '0'
     };
     
     // load texture
@@ -79,13 +86,54 @@ export class Lesson12Component implements OnInit {
       () => console.log('error')
     );
     const textloader = new THREE.TextureLoader(loadingmanager);
+    const cubeTextloader = new THREE.CubeTextureLoader(loadingmanager);
     this.texture['alpha texture'] = textloader.load('assets/textures/door/alpha.jpg', () => console.log('load'));
     this.texture['ambient occlusion texture'] = textloader.load('assets/textures/door/ambientOcclusion.jpg', () => console.log('load'));
-    this.texture['color textture'] = textloader.load('assets/textures/door/color.jpg', () => console.log('load'));
-    this.texture['height textture'] = textloader.load('assets/textures/door/height.jpg', () => console.log('load'));
-    this.texture['metalness textture'] = textloader.load('assets/textures/door/metalness.jpg', () => console.log('load'));
-    this.texture['roughness textture'] = textloader.load('assets/textures/door/roughness.jpg', () => console.log('load'));
-
+    this.texture['color texture'] = textloader.load('assets/textures/door/color.jpg', () => console.log('load'));
+    this.texture['height texture'] = textloader.load('assets/textures/door/height.jpg', () => console.log('load'));
+    this.texture['metalness texture'] = textloader.load('assets/textures/door/metalness.jpg', () => console.log('load'));
+    this.texture['roughness texture'] = textloader.load('assets/textures/door/roughness.jpg', () => console.log('load'));
+    this.texture['normal texture'] = textloader.load('assets/textures/door/normal.jpg', () => console.log('load'));
+    this.cubeTexture['0'] = cubeTextloader.load([
+      'assets/textures/environmentMaps/0/px.jpg',
+      'assets/textures/environmentMaps/0/nx.jpg',
+      'assets/textures/environmentMaps/0/py.jpg',
+      'assets/textures/environmentMaps/0/ny.jpg',
+      'assets/textures/environmentMaps/0/pz.jpg',
+      'assets/textures/environmentMaps/0/nz.jpg',
+    ]);
+    this.cubeTexture['1'] = cubeTextloader.load([
+      'assets/textures/environmentMaps/1/px.jpg',
+      'assets/textures/environmentMaps/1/nx.jpg',
+      'assets/textures/environmentMaps/1/py.jpg',
+      'assets/textures/environmentMaps/1/ny.jpg',
+      'assets/textures/environmentMaps/1/pz.jpg',
+      'assets/textures/environmentMaps/1/nz.jpg',
+    ]);
+    this.cubeTexture['2'] = cubeTextloader.load([
+      'assets/textures/environmentMaps/2/px.jpg',
+      'assets/textures/environmentMaps/2/nx.jpg',
+      'assets/textures/environmentMaps/2/py.jpg',
+      'assets/textures/environmentMaps/2/ny.jpg',
+      'assets/textures/environmentMaps/2/pz.jpg',
+      'assets/textures/environmentMaps/2/nz.jpg',
+    ]);
+    this.cubeTexture['3'] = cubeTextloader.load([
+      'assets/textures/environmentMaps/3/px.jpg',
+      'assets/textures/environmentMaps/3/nx.jpg',
+      'assets/textures/environmentMaps/3/py.jpg',
+      'assets/textures/environmentMaps/3/ny.jpg',
+      'assets/textures/environmentMaps/3/pz.jpg',
+      'assets/textures/environmentMaps/3/nz.jpg',
+    ]);
+    this.cubeTexture['4'] = cubeTextloader.load([
+      'assets/textures/environmentMaps/4/px.png',
+      'assets/textures/environmentMaps/4/nx.png',
+      'assets/textures/environmentMaps/4/py.png',
+      'assets/textures/environmentMaps/4/ny.png',
+      'assets/textures/environmentMaps/4/pz.png',
+      'assets/textures/environmentMaps/4/nz.png',
+    ]);
     this.matcapTexture['1'] = textloader.load('assets/textures/matcaps/1.png', () => console.log('load'));
     this.matcapTexture['2'] = textloader.load('assets/textures/matcaps/2.png', () => console.log('load'));
     this.matcapTexture['3'] = textloader.load('assets/textures/matcaps/3.png', () => console.log('load'));
@@ -112,15 +160,19 @@ export class Lesson12Component implements OnInit {
     this.torus.geometry.setAttribute('uv2', new THREE.BufferAttribute(this.torus.geometry.attributes['uv'].array, 2));
     this.torus.position.x = 1.5;
 
-    this.material.standard.metalness = 0;
-    this.material.standard.roughness = 1;
-    this.material.standard.map = this.texture['color textture'];
-    this.material.standard.aoMap = this.texture['ambient occlusion texture'];
-    this.material.standard.aoMapIntensity = 0;
-    this.material.standard.displacementMap = this.texture['height textture'];
-    this.material.standard.metalnessMap = this.texture['metalness texture'];
-    this.material.standard.roughnessMap = this.texture['roughness texture'];
-
+    this.material.standard.metalness = 0.7;
+    this.material.standard.roughness = 0.2;
+    this.material.standard.envMap = this.cubeTexture['0'];
+    // this.material.standard.map = this.texture['color texture'];
+    // this.material.standard.aoMap = this.texture['ambient occlusion texture'];
+    // this.material.standard.aoMapIntensity = 0.1;
+    // this.material.standard.displacementMap = this.texture['height texture'];
+    // this.material.standard.metalnessMap = this.texture['metalness texture'];
+    // this.material.standard.roughnessMap = this.texture['roughness texture'];
+    // this.material.standard.normalMap = this.texture['normal texture'];
+    // this.material.standard.normalScale.set(0.5, 0.5);
+    // this.material.standard.transparent = true;
+    // this.material.standard.alphaMap = this.texture['alpha texture'];
     // add light for some material
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     const pointLight = new THREE.PointLight(0xffffff, 0.5);
@@ -152,7 +204,7 @@ export class Lesson12Component implements OnInit {
     // basic gui;
     {
       basicGui.addColor(this.material.basic, 'color');
-      basicGui.add(param, 'texture', TEXTTURE_LIST ).onChange((text: string) => {
+      basicGui.add(param, 'texture', TEXTURE_LIST ).onChange((text: string) => {
         this.material.basic.map = this.texture[text];
       });
       basicGui.add(this.material.basic, 'wireframe');
@@ -160,14 +212,14 @@ export class Lesson12Component implements OnInit {
         this.material.basic.transparent = true;
         this.material.basic.opacity = n;
       });
-      basicGui.add(param, 'texture', TEXTTURE_LIST ).onChange((text: string) => {
+      basicGui.add(param, 'texture', TEXTURE_LIST ).onChange((text: string) => {
         if (text !== 'none') {
           this.material.basic.map = this.texture[text];
         } else {
           this.material.basic.map = null;
         }
       });
-      basicGui.add(param, 'alphaMap', TEXTTURE_LIST ).onChange((text: string) => {
+      basicGui.add(param, 'alphaMap', TEXTURE_LIST ).onChange((text: string) => {
         this.material.basic.transparent = true;
         if (text !== 'none') {
           this.material.basic.alphaMap = this.texture[text];
@@ -239,14 +291,14 @@ export class Lesson12Component implements OnInit {
     {
       standardGui.add(this.material.standard, 'metalness').max(1).min(0).step(0.0001);
       standardGui.add(this.material.standard, 'roughness').max(1).min(0).step(0.0001);
-      standardGui.add(param, 'texture', TEXTTURE_LIST ).onChange((text: string) => {
+      standardGui.add(param, 'texture', TEXTURE_LIST ).onChange((text: string) => {
         if (text !== 'none') {
           this.material.standard.map = this.texture[text];
         } else {
           this.material.standard.map = null;
         }
       });
-      standardGui.add(param, 'displacementMap', TEXTTURE_LIST ).onChange((text: string) => {
+      standardGui.add(param, 'displacementMap', TEXTURE_LIST ).onChange((text: string) => {
         this.material.standard.transparent = true;
         if (text !== 'none') {
           this.material.standard.displacementMap = this.texture[text];
@@ -256,7 +308,10 @@ export class Lesson12Component implements OnInit {
       });
 
       standardGui.add(this.material.standard, 'aoMapIntensity', 0, 100, 0.01);
-      standardGui.add(this.material.standard, 'displacementScale', 0, 1, 0.0001);
+      standardGui.add(this.material.standard, 'displacementScale', 0, 0.5, 0.0001);
+      standardGui.add(param, 'envMap', CUBETEXTURE_LIST).onChange((text: string) => {
+        this.material.standard.envMap = this.cubeTexture[text];  
+      });
     }
   }
 
@@ -287,10 +342,10 @@ export class Lesson12Component implements OnInit {
   }
 
   tick() {
-    const elapsedTime = this.clock.getElapsedTime();
-    this.sphere.rotation.set(elapsedTime * 0.1, elapsedTime * 0.05, this.sphere.rotation.z);
-    this.plane.rotation.set(elapsedTime * 0.15, elapsedTime * 0.05, this.plane.rotation.z);
-    this.torus.rotation.set(elapsedTime * 0.1, elapsedTime * 0.15, this.torus.rotation.z);
+    // const elapsedTime = this.clock.getElapsedTime();
+    // this.sphere.rotation.set(elapsedTime * 0.1, elapsedTime * 0.05, this.sphere.rotation.z);
+    // this.plane.rotation.set(elapsedTime * 0.15, elapsedTime * 0.05, this.plane.rotation.z);
+    // this.torus.rotation.set(elapsedTime * 0.1, elapsedTime * 0.15, this.torus.rotation.z);
     this.renderer.render(this.scene, this.camera);
     window.requestAnimationFrame(() => this.tick());
   }
