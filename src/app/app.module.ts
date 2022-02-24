@@ -35,6 +35,10 @@ const routes: Routes = [
   {
     path: 'lesson0to8',
     component: Lesson0to8Component
+  },
+  {
+    path: '**',
+    component: Lesson13Component
   }
 ];
 @NgModule({
