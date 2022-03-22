@@ -10,8 +10,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { Lesson11Component } from './lesson11/lesson11.component';
 import { Lesson12Component } from './lesson12/lesson12.component';
 import { Lesson13Component } from './lesson13/lesson13.component';
+import { Lesson15Component } from './lesson15/lesson15.component';
+import { Lesson16Component } from './lesson16/lesson16.component';
 
 const routes: Routes = [
+  {
+    path: 'lesson16',
+    component: Lesson16Component
+  },
+  {
+    path: 'lesson15',
+    component: Lesson15Component
+  },
   {
     path: 'lesson13',
     component: Lesson13Component
@@ -38,7 +48,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: Lesson13Component
+    component: Lesson15Component
   }
 ];
 @NgModule({
@@ -49,7 +59,9 @@ const routes: Routes = [
     Lesson10Component,
     Lesson11Component,
     Lesson12Component,
-    Lesson13Component
+    Lesson13Component,
+    Lesson15Component,
+    Lesson16Component
   ],
   imports: [
     BrowserModule,

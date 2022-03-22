@@ -1,10 +1,18 @@
 
 <div class="center">
-  <a routerLink="lesson13" routerLinkActive="active">Lv13</a>
-  <a routerLink="lesson12" routerLinkActive="active">Lv12</a>
-  <a routerLink="lesson11" routerLinkActive="active">Lv 11</a>
-  <a routerLink="lesson10" routerLinkActive="active">Lv 10</a>
-  <a routerLink="lesson9" routerLinkActive="active">Lv 9</a>
-  <a routerLink="lesson0to8" routerLinkActive="active">Lv 0-8</a>
+  <button *ngIf="page===0" (click)="next()">next</button>
+  <ng-container *ngIf="page===1">
+    <a routerLink="lesson16" routerLinkActive="active">Lv16</a>
+    <a routerLink="lesson15" routerLinkActive="active">Lv15</a>
+  </ng-container>
+  <ng-container *ngIf="page===0">
+    <a routerLink="lesson13" routerLinkActive="active">Lv13</a>
+    <a routerLink="lesson12" routerLinkActive="active">Lv12</a>
+    <a routerLink="lesson11" routerLinkActive="active">Lv 11</a>
+    <a routerLink="lesson10" routerLinkActive="active">Lv 10</a>
+    <a routerLink="lesson9" routerLinkActive="active">Lv 9</a>
+    <a routerLink="lesson0to8" routerLinkActive="active">Lv 0-8</a>
+  </ng-container>
+  <button *ngIf="page===1" (click)="previous()">previous</button>
 </div>
 <router-outlet></router-outlet>

@@ -11,13 +11,17 @@
         left: 0px;
     }
 }
-a {
+a, button {
     text-decoration: none;
     margin: 5px;
     padding: 3px 6px;
     background-color: springgreen;
     border: 1px solid springgreen;
     border-radius: 15px;
+}
+a:hover, button:hover {
+    color: yellow;
+    cursor: pointer;
 }
 .active {
     color: yellow;
