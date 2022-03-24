@@ -12,8 +12,13 @@ import { Lesson12Component } from './lesson12/lesson12.component';
 import { Lesson13Component } from './lesson13/lesson13.component';
 import { Lesson15Component } from './lesson15/lesson15.component';
 import { Lesson16Component } from './lesson16/lesson16.component';
+import { Lesson17Component } from './lesson17/lesson17.component';
 
 const routes: Routes = [
+  {
+    path: 'lesson17',
+    component: Lesson17Component
+  },
   {
     path: 'lesson16',
     component: Lesson16Component
@@ -48,7 +53,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: Lesson16Component
+    component: Lesson17Component
   }
 ];
 @NgModule({
@@ -61,7 +66,8 @@ const routes: Routes = [
     Lesson12Component,
     Lesson13Component,
     Lesson15Component,
-    Lesson16Component
+    Lesson16Component,
+    Lesson17Component
   ],
   imports: [
     BrowserModule,
