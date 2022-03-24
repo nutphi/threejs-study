@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { GUI } from 'lil-gui';
+import { fromEvent, Subject, takeUntil } from 'rxjs';
 import * as THREE from 'three';
 import { Group, Mesh } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -8,7 +9,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
   templateUrl: './lesson17.component.html',
   styleUrls: ['./lesson17.component.scss']
 })
-export class Lesson17Component implements AfterViewInit {
+export class Lesson17Component implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   scene!: THREE.Scene;
   camera!: THREE.PerspectiveCamera;
@@ -31,7 +32,12 @@ export class Lesson17Component implements AfterViewInit {
   ghosts: THREE.PointLight[] = [];
   graves: THREE.Mesh[] = [];
   random!: number[];
+  unsubscribe: Subject<void> = new Subject<void>();
   constructor() { }
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
 
   ngAfterViewInit(): void {
     
@@ -57,7 +63,26 @@ export class Lesson17Component implements AfterViewInit {
     directionalHelper.visible = false;
     this.scene.add(this.camera, this.house, this.floor, this.ambientLight, this.directionalLight, directionalHelper, new THREE.AxesHelper(1));
     this.random = this.ghosts.map(() => Math.random());
+    fromEvent(window, 'resize').pipe(takeUntil(this.unsubscribe)).subscribe(() => {
+      this.updateWindowSize();
+      this.updateCameraSizeRatio();
+      this.updateRendererSizeRatio();
+    });
     this.tick();
+  }
+
+  updateWindowSize() {
+    this.sizes = {width: window.innerWidth, height: window.innerHeight};
+  }
+
+  updateCameraSizeRatio() {
+    this.camera.aspect = this.sizes.width/this.sizes.height;
+    this.camera.updateProjectionMatrix();
+  }
+
+  updateRendererSizeRatio() {
+    this.renderer.setSize(this.sizes.width, this.sizes.height);
+    this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
   }
 
   tick() {
