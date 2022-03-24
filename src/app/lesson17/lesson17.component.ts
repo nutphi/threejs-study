@@ -30,6 +30,7 @@ export class Lesson17Component implements AfterViewInit {
   directionalLight!: THREE.DirectionalLight;
   ghosts: THREE.PointLight[] = [];
   graves: THREE.Mesh[] = [];
+  random!: number[];
   constructor() { }
 
   ngAfterViewInit(): void {
@@ -55,16 +56,16 @@ export class Lesson17Component implements AfterViewInit {
     const directionalHelper = new THREE.DirectionalLightHelper(this.directionalLight);
     directionalHelper.visible = false;
     this.scene.add(this.camera, this.house, this.floor, this.ambientLight, this.directionalLight, directionalHelper, new THREE.AxesHelper(1));
+    this.random = this.ghosts.map(() => Math.random());
     this.tick();
   }
 
   tick() {
     const elapsed = this.clock.getElapsedTime();
     this.ghosts.forEach((ghost, i) => {
-      ghost.position.x = (Math.cos(elapsed + i) * 6) + (i % 3 ? (Math.sin(elapsed * 4) * i + i) : 0);
-      ghost.position.z = (Math.sin(elapsed + i) * 6);
-      ghost.position.y = Math.sin(elapsed * 4 + i * 4) + (i % 2 ? (Math.sin(elapsed) * i + i) : 0);
-      console.log(ghost.position.y);
+      ghost.position.x = (i%2? -1: 1) * Math.cos(elapsed) * 5 * (i%3? Math.sin(elapsed * this.random[i]) : 1);
+      ghost.position.z = (i%2? -1: 1) * Math.sin(elapsed) * 5 * (i%4? Math.sin(elapsed * this.random[i]) : 1);
+      ghost.position.y = (Math.sin(elapsed) * 2 + 2) + Math.sin(elapsed * i) * this.random[i];
     })
 
     this.renderer.render(this.scene, this.camera);
@@ -260,7 +261,7 @@ export class Lesson17Component implements AfterViewInit {
       ghost.shadow.mapSize.height = 256
       ghost.shadow.camera.far = 7
       const helper = new THREE.PointLightHelper(ghost);
-      helper.visible = false;
+      helper.visible = true;
       this.scene.add(helper);
       this.gui.add(helper, 'visible');
       this.gui.addColor(ghost, 'color');
