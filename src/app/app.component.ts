@@ -8,8 +8,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AppComponent{
   page = 0;
+  hide = false;
   constructor(private route: ActivatedRoute) {
-    console.log(route);
+  }
+  toggle() {
+    this.hide = !this.hide;
   }
   next() {
     this.page+=1;
