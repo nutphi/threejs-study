@@ -261,7 +261,7 @@ export class Lesson17Component implements AfterViewInit {
       ghost.shadow.mapSize.height = 256
       ghost.shadow.camera.far = 7
       const helper = new THREE.PointLightHelper(ghost);
-      helper.visible = true;
+      helper.visible = false;
       this.scene.add(helper);
       this.gui.add(helper, 'visible');
       this.gui.addColor(ghost, 'color');
