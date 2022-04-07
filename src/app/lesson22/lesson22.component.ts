@@ -99,6 +99,18 @@ export class Lesson22Component implements OnInit, AfterViewInit {
       shape: this.sphere,
       material: plasticMaterial
     });
+    this.body['sphere3'] = new CANNON.Body({
+      mass: 1,
+      position: new CANNON.Vec3(0.5, 5, 0.5),
+      shape: this.sphere,
+      material: plasticMaterial
+    });
+    this.body['sphere4'] = new CANNON.Body({
+      mass: 1,
+      position: new CANNON.Vec3(0, 6, 0.5),
+      shape: this.sphere,
+      material: plasticMaterial
+    });
     const box = new CANNON.Box(new CANNON.Vec3(0.5, 10, 10));
     this.body['box'] = new CANNON.Body({
       mass: 1,
@@ -142,6 +154,8 @@ export class Lesson22Component implements OnInit, AfterViewInit {
     // this.world.addBody(this.body['plane3']);
     this.world.addBody(this.body['sphere']);
     this.world.addBody(this.body['sphere2']);
+    this.world.addBody(this.body['sphere3']);
+    this.world.addBody(this.body['sphere4']);
   }
 
   initMeshes() {
@@ -151,21 +165,36 @@ export class Lesson22Component implements OnInit, AfterViewInit {
     sphere.castShadow = true;
     const sphere2 = new THREE.Mesh(geometry, this.meshToonMaterial);
     sphere2.castShadow = true;
+    const sphere3 = new THREE.Mesh(geometry, this.meshToonMaterial);
+    sphere3.castShadow = true;
+    const sphere4 = new THREE.Mesh(geometry, this.meshToonMaterial);
+    sphere4.castShadow = true;
     const plane = new THREE.PlaneGeometry(100, 100, 32);
     const planeMesh = new THREE.Mesh(plane, this.meshToonMaterial);
     planeMesh.receiveShadow = true;
     planeMesh.rotation.x = Math.PI / 2;
     sphere.position.set(0.5, 3, 0);
     sphere2.position.set(0, 4, 0);
+    sphere3.position.set(0.5, 5, 0.5);
+    sphere4.position.set(0, 6, 0.5);
 
     const box = new THREE.BoxGeometry(0.5, 10, 10);
-    const boxMesh = new THREE.Mesh(box, this.meshToonMaterial);
-    const box2 = new THREE.BoxGeometry(0.5, 10, 10);
-    const boxMesh2 = new THREE.Mesh(box2, this.meshToonMaterial);
+    const boxMesh = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: 0x00ff88 }));
+    const boxMesh2 = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: 0x00ff88 }));
+    const boxMesh3 = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: 0x00ff88 }));
+    const boxMesh4 = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: 0x00ff88 }));
     boxMesh.position.set(5, 0, 0);
     boxMesh2.position.set(-5, 0, 0);
-    this.meshes= { sphere, sphere2, planeMesh, boxMesh, boxMesh2 };
-    this.scene.add(sphere, sphere2, planeMesh, boxMesh, boxMesh2);
+    boxMesh3.position.set(0, 0, 5);
+    boxMesh3.rotation.y = Math.PI / 2;
+    boxMesh4.position.set(0, 0, -5);
+    boxMesh4.rotation.y = Math.PI / 2;
+    boxMesh.castShadow = true;
+    boxMesh2.castShadow = true;
+    boxMesh3.castShadow = true;
+    boxMesh4.castShadow = true;
+    this.meshes= { sphere, sphere2, sphere3, sphere4, planeMesh, boxMesh, boxMesh2, boxMesh3, boxMesh4 };
+    this.scene.add(sphere, sphere2, sphere3, sphere4, planeMesh, boxMesh, boxMesh2, boxMesh3, boxMesh4);
   }
 
   animate() {
@@ -174,6 +203,8 @@ export class Lesson22Component implements OnInit, AfterViewInit {
     this.world.step(1 / 60, deltaTime, 3);
     this.meshes['sphere'].position.copy({ ... this.body['sphere'].position } as THREE.Vector3);
     this.meshes['sphere2'].position.copy({ ... this.body['sphere2'].position } as THREE.Vector3);
+    this.meshes['sphere3'].position.copy({ ... this.body['sphere3'].position } as THREE.Vector3);
+    this.meshes['sphere4'].position.copy({ ... this.body['sphere4'].position } as THREE.Vector3);
     // this.cameraGroup.quaternion.copy({ ... this.body.quaternion } as THREE.Quaternion);
     this.renderer.render(this.scene, this.camera);
     requestAnimationFrame(() => this.animate());
