@@ -54,7 +54,8 @@ export class Lesson22Component implements OnInit, AfterViewInit {
       side: THREE.DoubleSide
     });
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(0, 5, 10);
+    this.camera.position.set(0, 15, 10);
+    this.camera.rotation.y = Math.PI / 4;
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
     this.cameraGroup = new THREE.Group();
     this.cameraGroup.add(this.camera);
