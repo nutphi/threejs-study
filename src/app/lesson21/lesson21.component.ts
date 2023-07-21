@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import * as THREE from 'three';
 import GUI from 'lil-gui';
 import { fromEvent, Subject } from 'rxjs';
@@ -10,7 +10,7 @@ import gsap from 'gsap';
   styleUrls: ['./lesson21.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class Lesson21Component implements AfterViewInit {
+export class Lesson21Component implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   scene!: THREE.Scene;
   camera!: THREE.PerspectiveCamera;
@@ -30,6 +30,10 @@ export class Lesson21Component implements AfterViewInit {
   cursor: { x: number; y: number } = { x: 0, y: 0 };
   currentSection!: number;
   constructor() { }
+  ngOnDestroy(): void {
+    this.gui?.hide();
+    this.gui?.destroy();
+  }
   
   ngAfterViewInit(): void {
     

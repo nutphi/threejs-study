@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import GUI from 'lil-gui';
 import { fromEvent, Subject, takeUntil } from 'rxjs';
 import * as THREE from 'three';
@@ -11,7 +11,7 @@ type ParticleRendererType = typeof particleRendererList[number];
   templateUrl: './lesson18.component.html',
   styleUrls: ['./lesson18.component.scss']
 })
-export class Lesson18Component implements AfterViewInit {
+export class Lesson18Component implements AfterViewInit, OnDestroy {
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   scene!: THREE.Scene;
   camera!: THREE.PerspectiveCamera;
@@ -37,6 +37,10 @@ export class Lesson18Component implements AfterViewInit {
   count = 50000; // particle
   positions!: Float32Array;
   constructor() { }
+  ngOnDestroy(): void {
+    this.gui?.hide();
+    this.gui?.destroy();
+  }
 
   ngAfterViewInit(): void {
     // setup

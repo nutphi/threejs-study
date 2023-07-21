@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as CANNON from 'cannon';
 import GUI from 'lil-gui';
 import { Subject } from 'rxjs';
@@ -9,7 +9,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
   templateUrl: './lesson22.component.html',
   styleUrls: ['./lesson22.component.scss']
 })
-export class Lesson22Component implements OnInit, AfterViewInit {
+export class Lesson22Component implements OnInit, AfterViewInit, OnDestroy {
   world!: CANNON.World;
   sphere!: CANNON.Shape;
   plane!: CANNON.Plane;
@@ -32,6 +32,10 @@ export class Lesson22Component implements OnInit, AfterViewInit {
   unsubscribe: Subject<void> = new Subject();
   textureLoader!: THREE.TextureLoader;
   constructor() { }
+  ngOnDestroy(): void {
+    this.gui?.hide();
+    this.gui?.destroy();
+  }
 
   ngAfterViewInit(): void {
     this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas.nativeElement });
@@ -81,8 +85,8 @@ export class Lesson22Component implements OnInit, AfterViewInit {
       concreteMaterial,
       plasticMaterial,
       {
-        friction: 0.01,
-        restitution: 1,
+        friction: 1,
+        restitution: 0.0001,
       }
     );
     this.world.addContactMaterial(groundContactMaterial);

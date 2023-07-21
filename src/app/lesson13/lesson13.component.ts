@@ -146,4 +146,9 @@ export class Lesson13Component implements OnInit, AfterViewInit {
     window.requestAnimationFrame(() => this.tick());
   }
 
+  ngOnDestroy(): void {
+    this.gui.hide();
+    this.gui.destroy();
+  }
+
 }

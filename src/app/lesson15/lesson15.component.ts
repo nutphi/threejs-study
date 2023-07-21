@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as THREE from 'three';
 import { DirectionalLightHelper, Vector3, WebGLRenderer } from 'three';
 import GUI from 'lil-gui';
@@ -10,7 +10,7 @@ import { fromEvent, Subject, takeUntil } from 'rxjs';
   templateUrl: './lesson15.component.html',
   styleUrls: ['./lesson15.component.scss']
 })
-export class Lesson15Component implements OnInit, AfterViewInit {
+export class Lesson15Component implements OnInit, AfterViewInit, OnDestroy {
   material!: THREE.Material;
   sphere!: THREE.SphereBufferGeometry;
   box!: THREE.BoxBufferGeometry;
@@ -32,6 +32,10 @@ export class Lesson15Component implements OnInit, AfterViewInit {
   unsubscribe: Subject<void> = new Subject<void>();
   @ViewChild('canvas', {static: false}) canvas!: ElementRef;
   constructor() { }
+  ngOnDestroy(): void {
+    this.gui.hide();
+    this.gui.destroy();
+  }
 
   updateWindowSize() {
     this.sizes = {width: window.innerWidth, height: window.innerHeight};

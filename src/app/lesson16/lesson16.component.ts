@@ -29,11 +29,16 @@ export class Lesson16Component implements OnInit, AfterViewInit, OnDestroy {
   sphereShadow!: THREE.Mesh;
   sphereShadowMaterial!: THREE.MeshBasicMaterial;
   change!: { bake: boolean, simple: boolean };
+
   constructor() { }
+
   ngOnDestroy(): void {
+    this.gui.hide();
+    this.gui.destroy();
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
+
   ngAfterViewInit(): void {
     const textureLoader = new THREE.TextureLoader();
     const bakeShadow = textureLoader.load('/assets/textures/shadows/bakedShadow.jpg');

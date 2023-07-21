@@ -39,7 +39,7 @@ export class Lesson12Component implements OnInit {
     // shader material later
     // raw shader material later
   }
-  
+  gui: GUI = new GUI();
   sphere!: THREE.Mesh;
   plane!: THREE.Mesh;
   torus!: THREE.Mesh;
@@ -185,21 +185,21 @@ export class Lesson12Component implements OnInit {
     this.scene.add(this.sphere, this.plane, this.torus);
     this.scene.add(this.camera);
     this.camera.position.set(0,0,3);
-    const gui = new GUI();
-    gui.add(param, 'material', Object.values(MAT_LIST)).onChange((text: MAT_TYPE) => {
+    
+    this.gui.add(param, 'material', Object.values(MAT_LIST)).onChange((text: MAT_TYPE) => {
       this.sphere.material = this.material[text];
       this.plane.material = this.material[text];
       this.torus.material = this.material[text];
     })
-    const basicGui = gui.addFolder('basic material').close();
-    const normalGui = gui.addFolder('normal material').close();
-    const matcapGui = gui.addFolder('matcap material').close();
-    const depthGui = gui.addFolder('depth material').close();
-    const lambert = gui.addFolder('lambert material').close();
-    const phongGui = gui.addFolder('phong material').close();
-    const toonGui = gui.addFolder('toon material').close();
-    const standardGui = gui.addFolder('standard material');
-    gui.folders.push(basicGui, normalGui, matcapGui, depthGui, lambert, phongGui, toonGui, standardGui);
+    const basicGui = this.gui.addFolder('basic material').close();
+    const normalGui = this.gui.addFolder('normal material').close();
+    const matcapGui = this.gui.addFolder('matcap material').close();
+    const depthGui = this.gui.addFolder('depth material').close();
+    const lambert = this.gui.addFolder('lambert material').close();
+    const phongGui = this.gui.addFolder('phong material').close();
+    const toonGui = this.gui.addFolder('toon material').close();
+    const standardGui = this.gui.addFolder('standard material');
+    this.gui.folders.push(basicGui, normalGui, matcapGui, depthGui, lambert, phongGui, toonGui, standardGui);
 
     // basic gui;
     {
@@ -337,6 +337,8 @@ export class Lesson12Component implements OnInit {
   }
 
   ngOnDestroy(): void {
+    this.gui.hide();
+    this.gui.destroy();
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }

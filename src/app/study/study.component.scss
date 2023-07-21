@@ -1,0 +1,26 @@
+:host {
+    position: relative;
+    button {
+        position: absolute;
+        &.one {
+            bottom: 5px;
+            left: 5px;
+        }
+        &.two {
+            bottom: 25px;
+            left: 5px;
+        }
+        &.three {
+            bottom: 45px;
+            left: 5px;
+        }
+        &.four {
+            bottom: 65px;
+            left: 5px;
+        }
+        &.five {
+            bottom: 85px;
+            left: 5px;
+        }
+    }
+}

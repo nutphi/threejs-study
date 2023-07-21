@@ -35,6 +35,8 @@ export class Lesson17Component implements AfterViewInit, OnDestroy {
   unsubscribe: Subject<void> = new Subject<void>();
   constructor() { }
   ngOnDestroy(): void {
+    this.gui.hide();
+    this.gui.destroy();
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
