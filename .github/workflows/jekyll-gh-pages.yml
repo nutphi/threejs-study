@@ -50,7 +50,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v1.2.9
         with:
           artifact_name: /home/runner/work/_temp/artifact.tar
           token: ${{ github.token }}
