@@ -25,6 +25,10 @@ import { Lesson28Component } from './lesson28/lesson28.component';
 
 const routes: Routes = [
   {
+    path: 'lesson27',
+    component: Lesson27Component
+  },
+  {
     path: 'lesson25',
     component: Lesson25Component
   },
@@ -86,7 +90,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: Lesson27Component
+    component: Lesson0to8Component
   }
 ];
 @NgModule({

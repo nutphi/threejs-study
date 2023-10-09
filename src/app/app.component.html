@@ -3,24 +3,29 @@
   <button class="close" (click)="toggle()">x</button>
   <ng-container *ngIf="hide">
     <button *ngIf="page===0" (click)="next()">next</button>
+    <ng-container *ngIf="page===2">
+      <a routerLink="lesson27" routerLinkActive="active">Lesson25</a>
+      <a routerLink="lesson25" routerLinkActive="active">Lesson24</a>
+      <a routerLink="lesson23" routerLinkActive="active">Lesson23</a>
+      <a routerLink="lesson22" routerLinkActive="active">Lesson22</a>
+      <a routerLink="lesson21" routerLinkActive="active">Lesson21</a>
+    </ng-container>
     <ng-container *ngIf="page===1">
-      <a routerLink="lesson22" routerLinkActive="active">Lv22</a>
-      <a routerLink="lesson21" routerLinkActive="active">Lv21</a>
-      <a routerLink="lesson20" routerLinkActive="active">Lv20</a>
-      <a routerLink="lesson18" routerLinkActive="active">Lv18</a>
-      <a routerLink="lesson17" routerLinkActive="active">Lv17</a>
-      <a routerLink="lesson16" routerLinkActive="active">Lv16</a>
-      <a routerLink="lesson15" routerLinkActive="active">Lv15</a>
+      <a routerLink="lesson20" routerLinkActive="active">Lesson20</a>
+      <a routerLink="lesson18" routerLinkActive="active">Lesson18</a>
+      <a routerLink="lesson17" routerLinkActive="active">Lesson17</a>
+      <a routerLink="lesson16" routerLinkActive="active">Lesson16</a>
+      <a routerLink="lesson15" routerLinkActive="active">Lesson15</a>
     </ng-container>
     <ng-container *ngIf="page===0">
-      <a routerLink="lesson13" routerLinkActive="active">Lv13</a>
-      <a routerLink="lesson12" routerLinkActive="active">Lv12</a>
-      <a routerLink="lesson11" routerLinkActive="active">Lv 11</a>
-      <a routerLink="lesson10" routerLinkActive="active">Lv 10</a>
-      <a routerLink="lesson9" routerLinkActive="active">Lv 9</a>
-      <a routerLink="lesson0to8" routerLinkActive="active">Lv 0-8</a>
+      <a routerLink="lesson13" routerLinkActive="active">Lesson13</a>
+      <a routerLink="lesson12" routerLinkActive="active">Lesson12</a>
+      <a routerLink="lesson11" routerLinkActive="active">Lesson 11</a>
+      <a routerLink="lesson10" routerLinkActive="active">Lesson 10</a>
+      <a routerLink="lesson9" routerLinkActive="active">Lesson 9</a>
+      <a routerLink="lesson0to8" routerLinkActive="active">Lesson 0-8</a>
     </ng-container>
-    <button *ngIf="page===1" (click)="previous()">previous</button>
+    <button *ngIf="page===2" (click)="previous()">previous</button>
   </ng-container>
 </div>
 <router-outlet></router-outlet>
