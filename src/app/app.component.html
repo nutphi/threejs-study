@@ -1,8 +1,8 @@
 
 <div class="center">
-  <button class="close" (click)="toggle()">x</button>
+  <button class="close" (click)="toggle()">{{ hide ? 'hide' : 'show' }}</button>
   <ng-container *ngIf="hide">
-    <button *ngIf="page===0" (click)="next()">next</button>
+    <button *ngIf="page <= 1" (click)="next()">next</button>
     <ng-container *ngIf="page===2">
       <a routerLink="lesson27" routerLinkActive="active">Lesson25</a>
       <a routerLink="lesson25" routerLinkActive="active">Lesson24</a>
@@ -25,7 +25,7 @@
       <a routerLink="lesson9" routerLinkActive="active">Lesson 9</a>
       <a routerLink="lesson0to8" routerLinkActive="active">Lesson 0-8</a>
     </ng-container>
-    <button *ngIf="page===2" (click)="previous()">previous</button>
+    <button *ngIf="page >= 1" (click)="previous()">previous</button>
   </ng-container>
 </div>
 <router-outlet></router-outlet>
