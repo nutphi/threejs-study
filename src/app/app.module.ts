@@ -90,7 +90,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: Lesson0to8Component
+    component: StudyComponent
   }
 ];
 @NgModule({
